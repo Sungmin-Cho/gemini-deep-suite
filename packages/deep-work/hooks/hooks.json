@@ -1,0 +1,73 @@
+{
+  "description": "Phase enforcement, file tracking, update check, and session lifecycle hooks (Gemini port v0.1.0)",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${extensionPath}/hooks/scripts/update-check.sh",
+            "timeout": 8000
+          },
+          {
+            "type": "command",
+            "command": "node ${extensionPath}/sensors/detect.js",
+            "timeout": 8000
+          }
+        ]
+      }
+    ],
+    "BeforeTool": [
+      {
+        "matcher": "write_file|replace|run_shell_command|write_todos|save_memory|tracker_create_task|tracker_update_task|tracker_add_dependency",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${extensionPath}/hooks/scripts/phase-guard.sh",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "AfterTool": [
+      {
+        "matcher": "write_file|replace|run_shell_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${extensionPath}/hooks/scripts/file-tracker.sh",
+            "timeout": 3000
+          },
+          {
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/scripts/sensor-trigger.js",
+            "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "write_file|replace",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${extensionPath}/hooks/scripts/phase-transition.sh",
+            "timeout": 3000
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${extensionPath}/hooks/scripts/session-end.sh",
+            "timeout": 5000
+          }
+        ]
+      }
+    ]
+  }
+}

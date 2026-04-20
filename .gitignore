@@ -1,0 +1,29 @@
+.DS_Store
+node_modules/
+dist/
+*.tmp
+
+# deep-work — session state & workspace outputs (machine-local)
+.claude/deep-work.*.md
+.claude/deep-work.md
+.claude/deep-work.session
+.claude/deep-work-profile.yaml
+.claude/.hook-tool-input.*
+.deep-work/
+
+# deep-review — runtime state & local review outputs
+.deep-review/config.yaml
+.deep-review/reports/
+.deep-review/responses/
+.deep-review/entropy-log.jsonl
+.deep-review/recurring-findings.json
+
+# deep-docs — local scan artifacts
+.deep-docs/
+
+# Claude Code / Gemini CLI machine-local settings + runtime cache
+.claude/settings.local.json
+.gemini/
+
+# Misc dev artifacts
+hello-gemini-install-test/

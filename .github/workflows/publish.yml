@@ -1,0 +1,114 @@
+name: Publish subtree mirror
+
+on:
+  push:
+    tags:
+      - "deep-work-v*"
+      - "deep-wiki-v*"
+      - "deep-evolve-v*"
+      - "deep-review-v*"
+      - "deep-docs-v*"
+      - "deep-dashboard-v*"
+  workflow_dispatch:
+    inputs:
+      package:
+        description: "Package name (e.g. deep-work)"
+        required: true
+        type: string
+      ref:
+        description: "Version ref (e.g. v0.1.0). Leave empty for branch-only push."
+        required: false
+        type: string
+      dry_run:
+        description: "Dry-run (subtree split + show diff, no push)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: publish-${{ github.event.inputs.package || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  subtree-split-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Derive package + ref from tag or input
+        id: meta
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          INPUT_PACKAGE: ${{ github.event.inputs.package }}
+          INPUT_REF: ${{ github.event.inputs.ref }}
+        run: |
+          if [ -n "$INPUT_PACKAGE" ]; then
+            PKG="$INPUT_PACKAGE"
+            REF="$INPUT_REF"
+          else
+            TAG="$GITHUB_REF_NAME"
+            PKG="${TAG%-v*}"
+            REF="v${TAG##*-v}"
+          fi
+          echo "package=$PKG" >> "$GITHUB_OUTPUT"
+          echo "ref=$REF" >> "$GITHUB_OUTPUT"
+          echo "Package: $PKG, Ref: $REF"
+
+      - name: Validate package exists
+        env:
+          PKG: ${{ steps.meta.outputs.package }}
+        run: |
+          if [ ! -d "packages/$PKG" ]; then
+            echo "::error::packages/$PKG not found"
+            exit 1
+          fi
+
+      - name: Configure git
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "github-actions[bot]"
+
+      - name: Set up mirror remote + deploy key
+        if: github.event.inputs.dry_run != 'true'
+        env:
+          PKG: ${{ steps.meta.outputs.package }}
+          DEPLOY_KEY: ${{ secrets.MIRROR_DEPLOY_KEY }}
+        run: |
+          if [ -z "$DEPLOY_KEY" ]; then
+            echo "::error::MIRROR_DEPLOY_KEY secret not set"
+            exit 1
+          fi
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/mirror_key
+          chmod 600 ~/.ssh/mirror_key
+          printf 'Host mirror-%s\n  HostName github.com\n  IdentityFile ~/.ssh/mirror_key\n  StrictHostKeyChecking no\n' "$PKG" >> ~/.ssh/config
+          git remote add "mirror-$PKG" "git@mirror-$PKG:sungmin-cho/gemini-$PKG.git"
+
+      - name: Subtree split
+        env:
+          PKG: ${{ steps.meta.outputs.package }}
+        run: |
+          git subtree split -P "packages/$PKG" -b "publish/$PKG" --rejoin || true
+          echo "Split commit: $(git rev-parse publish/$PKG)"
+
+      - name: Dry-run summary
+        if: github.event.inputs.dry_run == 'true'
+        env:
+          PKG: ${{ steps.meta.outputs.package }}
+        run: |
+          echo "::notice::Dry-run complete. Would push publish/$PKG -> mirror-$PKG:main"
+          git log "publish/$PKG" --oneline -10
+
+      - name: Push to mirror
+        if: github.event.inputs.dry_run != 'true'
+        env:
+          PKG: ${{ steps.meta.outputs.package }}
+          REF: ${{ steps.meta.outputs.ref }}
+        run: |
+          git push "mirror-$PKG" "publish/$PKG:main" --force-with-lease
+          if [ -n "$REF" ]; then
+            SPLIT_SHA="$(git rev-parse publish/$PKG)"
+            git push "mirror-$PKG" "$SPLIT_SHA:refs/tags/$REF"
+          fi
