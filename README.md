@@ -1,5 +1,7 @@
 # gemini-deep-suite
 
+**English** | [한국어](./README.ko.md)
+
 Gemini CLI extensions for Evidence-Driven Development, ported from [claude-deep-suite](https://github.com/Sungmin-Cho/claude-deep-suite).
 
 ## Status
