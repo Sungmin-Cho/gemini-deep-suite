@@ -27,3 +27,6 @@ dist/
 
 # Misc dev artifacts
 hello-gemini-install-test/
+
+# Agent-specific instructions (machine-local — not pushed)
+CLAUDE.md
