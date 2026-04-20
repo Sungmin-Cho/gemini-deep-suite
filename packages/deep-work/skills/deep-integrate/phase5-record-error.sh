@@ -49,7 +49,7 @@ SESSION_ID="${DEEP_WORK_SESSION_ID:-}"
 _pr=""
 _cur="$WORK_DIR"
 while [[ -n "$_cur" && "$_cur" != "/" ]]; do
-  if [[ -d "$_cur/.claude" ]]; then
+  if [[ -d "$_cur/.gemini" || -d "$_cur/.claude" ]]; then
     _pr="$_cur"
     break
   fi

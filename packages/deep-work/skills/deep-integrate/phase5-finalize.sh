@@ -63,8 +63,8 @@ fi
 
 # .claude 디렉토리에 위치하는지 확인.
 _state_parent_dir="$(basename "$(dirname "$STATE_FILE")")"
-if [[ "$_state_parent_dir" != ".claude" ]]; then
-  err "refusing: state file not in .claude/ directory (got parent: $_state_parent_dir)"
+if [[ "$_state_parent_dir" != ".gemini" && "$_state_parent_dir" != ".claude" ]]; then
+  err "refusing: state file not in .gemini/ or .claude/ directory (got parent: $_state_parent_dir)"
   exit 1
 fi
 

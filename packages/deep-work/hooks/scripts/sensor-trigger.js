@@ -11,7 +11,7 @@ const path = require('node:path');
 function findProjectRoot(startDir) {
   let dir = startDir || process.cwd();
   while (dir !== path.dirname(dir)) {
-    if (fs.existsSync(path.join(dir, '.claude'))) return dir;
+    if (fs.existsSync(path.join(dir, '.gemini')) || fs.existsSync(path.join(dir, '.claude'))) return dir;
     dir = path.dirname(dir);
   }
   return null;
@@ -55,7 +55,7 @@ function main() {
     root = findProjectRoot();
     if (!root) return;
 
-    const stateFile = path.join(root, '.claude', `deep-work.${sessionId}.md`);
+    const stateFile = (fs.existsSync(path.join(root, '.gemini', `deep-work.${sessionId}.md`)) ? path.join(root, '.gemini', `deep-work.${sessionId}.md`) : path.join(root, '.claude', `deep-work.${sessionId}.md`));
     if (!fs.existsSync(stateFile)) return;
 
     // Serialize read-modify-write with file-tracker.sh's state updates.

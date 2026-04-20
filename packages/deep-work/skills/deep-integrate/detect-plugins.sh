@@ -9,7 +9,7 @@ warn() {
   printf '[deep-integrate/warn] %s\n' "$*" >&2
 }
 
-PLUGINS_ROOT="${HOME}/.claude/plugins/cache"
+PLUGINS_ROOT="${HOME}/.gemini/extensions"
 TARGETS=(deep-review deep-evolve deep-docs deep-wiki deep-dashboard)
 PLUGINS_ROOT_OVERRIDE=""
 
@@ -36,7 +36,7 @@ SEARCH_ROOTS=()
 if [[ -n "$PLUGINS_ROOT_OVERRIDE" ]]; then
   [[ -d "$PLUGINS_ROOT_OVERRIDE" ]] && SEARCH_ROOTS+=("$PLUGINS_ROOT_OVERRIDE")
 else
-  for cand in "${HOME}/.claude/plugins/cache" "${HOME}/.claude/plugins/marketplaces" "${HOME}/.claude/plugins"; do
+  for cand in "${HOME}/.gemini/extensions" "${HOME}/.claude/plugins/cache" "${HOME}/.claude/plugins/marketplaces" "${HOME}/.claude/plugins"; do
     [[ -d "$cand" ]] && SEARCH_ROOTS+=("$cand")
   done
 fi

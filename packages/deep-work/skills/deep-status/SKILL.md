@@ -9,7 +9,7 @@ Display the current state of the Deep Work session and session history.
 
 ## Language
 
-Detect the user's language from their messages or the Claude Code `language` setting. **Output ALL user-facing messages in the detected language.** The display templates below use Korean as the reference format — translate naturally to the user's language while preserving emoji, formatting, and structure.
+Detect the user's language from their messages or the Gemini CLI `language` setting. **Output ALL user-facing messages in the detected language.** The display templates below use Korean as the reference format — translate naturally to the user's language while preserving emoji, formatting, and structure.
 
 ## Instructions
 
@@ -110,7 +110,7 @@ Read the resolved state file (from Step 1) to get session state.
 Extract `work_dir` from the state file. If missing, default to `deep-work` (backward compatibility).
 Set `WORK_DIR` to this value.
 
-Read `model_routing` and `notifications` from the state file. If missing, show defaults (Research=sonnet, Plan=현재 세션, Implement=sonnet, Test=haiku for model routing; "설정 없음" for notifications).
+Read `model_routing` and `notifications` from the state file. If missing, show defaults (Research=gemini-2.5-pro, Plan=현재 세션, Implement=gemini-2.5-pro, Test=gemini-2.5-flash for model routing; "설정 없음" for notifications).
 
 Read `evaluator_model`, `assumption_adjustments`, `skipped_phases`, `plan_review_retries`, and `plan_review_max_retries` from the state file. If missing, default to: evaluator_model="없음", assumption_adjustments=[] (empty), skipped_phases=[] (empty), plan_review_retries=0, plan_review_max_retries=3.
 

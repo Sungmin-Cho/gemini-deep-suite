@@ -6,7 +6,7 @@
 
 ### 1. Runtime state namespace
 
-CC uses `.claude/deep-work.{SESSION_ID}.md` for session state. Gemini port uses **`.gemini/deep-work/state-{SESSION_ID}.md`** to avoid namespace collision if you use both tools in the same repo.
+CC uses `.claude/deep-work.{SESSION_ID}.md` for session state. Gemini port uses **`.gemini/deep-work.{SESSION_ID}.md`** to avoid namespace collision if you use both tools in the same repo.
 
 Legacy migration: A future helper `/dw-migrate` slash command (planned v0.1.1) will convert CC state files to Gemini layout.
 

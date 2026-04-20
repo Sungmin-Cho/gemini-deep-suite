@@ -12,7 +12,7 @@ View historical session data across all completed Deep Work sessions.
 
 ## Language
 
-Detect the user's language from their messages or the Claude Code `language` setting. Output ALL user-facing messages in the detected language.
+Detect the user's language from their messages or the Gemini CLI `language` setting. Output ALL user-facing messages in the detected language.
 
 ## Instructions
 
@@ -38,8 +38,8 @@ For each `session-receipt.json`, extract:
 - `outcome` (merge/pr/keep/discard)
 - `slices.total`, `slices.completed`
 - `tdd_compliance` (strict/relaxed/override/spike/coaching counts)
-- `model_usage` (haiku/sonnet/opus/main counts)
-- `evaluation.evaluator_model` (haiku/sonnet/opus — the model used for plan/test evaluation)
+- `model_usage` (gemini-2.5-flash/gemini-2.5-pro/gemini-2.5-pro/main counts)
+- `evaluation.evaluator_model` (gemini-2.5-flash/gemini-2.5-pro/gemini-2.5-pro — the model used for plan/test evaluation)
 - `total_estimated_cost`
 - `deep_work_version`
 
@@ -51,12 +51,12 @@ Deep Work Session History
 ┌────┬──────────────────────┬────────────┬────────┬──────────┬───────────┬───────────┐
 │ #  │ Task                 │ Date       │ Slices │ Outcome  │ Model     │ Evaluator │
 ├────┼──────────────────────┼────────────┼────────┼──────────┼───────────┼───────────┤
-│ 1  │ Add model routing    │ 2026-03-25 │ 4/4    │ PR #42   │ S1 H2 O1 │ sonnet    │
-│ 2  │ Fix receipt bug      │ 2026-03-23 │ 2/2    │ merge    │ S2       │ haiku     │
-│ 3  │ Worktree setup       │ 2026-03-20 │ 3/5    │ keep     │ S3       │ sonnet    │
+│ 1  │ Add model routing    │ 2026-03-25 │ 4/4    │ PR #42   │ S1 H2 O1 │ gemini-2.5-pro    │
+│ 2  │ Fix receipt bug      │ 2026-03-23 │ 2/2    │ merge    │ S2       │ gemini-2.5-flash     │
+│ 3  │ Worktree setup       │ 2026-03-20 │ 3/5    │ keep     │ S3       │ gemini-2.5-pro    │
 └────┴──────────────────────┴────────────┴────────┴──────────┴───────────┴───────────┘
 
-S=sonnet H=haiku O=opus M=main
+S=gemini-2.5-pro H=gemini-2.5-flash O=gemini-2.5-pro M=main
 Evaluator: evaluation.evaluator_model from session receipt (or "—" if not set)
 ```
 
@@ -66,8 +66,8 @@ Evaluator: evaluation.evaluator_model from session receipt (or "—" if not set)
 Aggregate Stats (최근 [N]개 세션)
 
    TDD 준수율: strict [N]% | relaxed [N]% | override [N]% | spike [N]%
-   모델 사용: haiku [N]회 | sonnet [N]회 | opus [N]회
-   평가자 모델 사용: haiku [N]회 | sonnet [N]회 | opus [N]회
+   모델 사용: gemini-2.5-flash [N]회 | gemini-2.5-pro [N]회 | gemini-2.5-pro [N]회
+   평가자 모델 사용: gemini-2.5-flash [N]회 | gemini-2.5-pro [N]회 | gemini-2.5-pro [N]회
    완료율: [completed]/[total] 슬라이스 ([N]%)
    결과: merge [N] | PR [N] | keep [N] | discard [N]
 ```

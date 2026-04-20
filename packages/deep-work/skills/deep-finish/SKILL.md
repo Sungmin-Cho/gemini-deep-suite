@@ -4,7 +4,7 @@ description: "**Internal (v6.3.0)** — orchestrator가 이 파일의 로직을 
 ---
 
 > **Internal (v6.3.0)** — orchestrator가 이 파일의 로직을 참조합니다. 자동 호출이 주 경로이며, 수동 호출도 공식 경로입니다(특히 test 통과 후 세션 완료 시).
-> 참조처: `skills/deep-work-orchestrator/SKILL.md` Step 3-6 (`Read "/deep-finish"`). `skills/deep-test/SKILL.md`가 test pass 후 수동 호출을 안내.
+> 참조처: `skills/deep-work/SKILL.md` Step 3-6 (`Read "/deep-finish"`). `skills/deep-test/SKILL.md`가 test pass 후 수동 호출을 안내.
 
 # Deep Work Session Completion (v4.1)
 
@@ -12,7 +12,7 @@ Finish the current Deep Work session with an explicit branch completion workflow
 
 ## Language
 
-Detect the user's language from their messages or the Claude Code `language` setting. **Output ALL user-facing messages in the detected language.** The display templates below use Korean as the reference format — translate naturally to the user's language while preserving emoji, formatting, and structure.
+Detect the user's language from their messages or the Gemini CLI `language` setting. **Output ALL user-facing messages in the detected language.** The display templates below use Korean as the reference format — translate naturally to the user's language while preserving emoji, formatting, and structure.
 
 ## Instructions
 
@@ -92,7 +92,7 @@ WORK_DIR="${PROJECT_ROOT}/$(read_frontmatter_field "$STATE_FILE" work_dir)"
 bash skills/deep-integrate/phase5-record-error.sh <ABSOLUTE_WORK_DIR>
 ```
 
-**중요 (v6.3.0 review W5-1)**: Claude Code의 Bash tool은 매 호출마다 새 shell을 spawn하므로 이전 단계에서 export한 `$WORK_DIR` 같은 변수가 persist하지 않는다. LLM은 state file에서 `work_dir`을 먼저 읽어 `<ABSOLUTE_WORK_DIR>` 자리에 실제 절대경로를 치환 후 호출한다. literal `"$WORK_DIR"`를 그대로 전달하면 empty string으로 확장되어 helper가 usage 에러로 fail한다.
+**중요 (v6.3.0 review W5-1)**: Gemini CLI의 Bash tool은 매 호출마다 새 shell을 spawn하므로 이전 단계에서 export한 `$WORK_DIR` 같은 변수가 persist하지 않는다. LLM은 state file에서 `work_dir`을 먼저 읽어 `<ABSOLUTE_WORK_DIR>` 자리에 실제 절대경로를 치환 후 호출한다. literal `"$WORK_DIR"`를 그대로 전달하면 empty string으로 확장되어 helper가 usage 에러로 fail한다.
 
 또한 helper는 state file의 `phase5_work_dir_snapshot`을 읽어 인자와 일치하는지 검증하므로(RC5-3), 올바른 세션 work_dir이어야 실행된다.
 
@@ -105,7 +105,7 @@ bash skills/deep-integrate/phase5-record-error.sh <ABSOLUTE_WORK_DIR>
 Scan `$WORK_DIR/receipts/` for all `SLICE-*.json` files. For each:
 - Count completed (status: "complete") vs total
 - Aggregate TDD compliance (strict/relaxed/coaching/override/spike counts)
-- Aggregate model usage (haiku/sonnet/opus counts)
+- Aggregate model usage (gemini-2.5-flash/gemini-2.5-pro/gemini-2.5-pro counts)
 - Sum estimated_cost across slices
 
 **Generate `$WORK_DIR/session-receipt.json`** (derived cache — canonical source is slice receipts):
@@ -132,7 +132,7 @@ Scan `$WORK_DIR/receipts/` for all `SLICE-*.json` files. For each:
     "strict": N, "relaxed": N, "override": N, "spike": N, "coaching": N
   },
   "model_usage": {
-    "haiku": N, "sonnet": N, "opus": N, "main": N
+    "gemini-2.5-flash": N, "gemini-2.5-pro": N, "gemini-2.5-pro": N, "main": N
   },
   "total_estimated_cost": null,
   "total_files_changed": N,
@@ -143,7 +143,7 @@ Scan `$WORK_DIR/receipts/` for all `SLICE-*.json` files. For each:
     "verification_evidence": "PASS/FAIL"
   },
   "evaluation": {
-    "evaluator_model": "sonnet",
+    "evaluator_model": "gemini-2.5-pro",
     "plan_review_retries": 0,
     "test_retry_count": 0,
     "assumption_adjustments": []
@@ -248,7 +248,7 @@ Deep Work 세션 요약
    Branch: [worktree_branch or current branch]
    Slices: [completed]/[total] 완료
    TDD: [strict_count] strict, [override_count] override, [spike_count] spike
-   Model: haiku×[n] sonnet×[n] opus×[n]
+   Model: gemini-2.5-flash×[n] gemini-2.5-pro×[n] gemini-2.5-pro×[n]
    Quality gates: [PASS/FAIL summary]
    Quality Score: [score]/100
 ```

@@ -1,6 +1,6 @@
 ---
 name: deep-work-workflow
-description: ""
+description: "Deep-work workflow overview and phase references (read-only guide)"
 ---
 
 # Deep Work Workflow: Brainstorm → Research → Plan → Implement → Test → Integrate
@@ -44,7 +44,7 @@ description: ""
 ## v6.0.2 Phase Review Gate & Folder Rename
 
 **v6.0.2 신규 기능:**
-- **Phase Review Gate**: 모든 Phase(0~3) 종료 시 통합 리뷰 게이트 자동 실행. 셀프 리뷰 + 외부 리뷰(deep-review/codex/gemini/Opus) 후 사용자 확인
+- **Phase Review Gate**: 모든 Phase(0~3) 종료 시 통합 리뷰 게이트 자동 실행. 셀프 리뷰 + 외부 리뷰(deep-review/codex/gemini/gemini-2.5-pro) 후 사용자 확인
 - **Phase별 Fallback 체인**: Phase 0~2(문서)는 Structural+Adversarial, Phase 3(코드)는 deep-review 우선
 - **사용자 확인 UX**: 요약 → 선택지(자동 수정/현재 진행/상세 보기)
 - **Degraded Mode**: 외부 리뷰어 실패 시 자동 fallback

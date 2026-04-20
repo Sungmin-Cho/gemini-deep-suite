@@ -36,7 +36,7 @@ Initial release — Gemini CLI 0.35.0 port of `claude-deep-work v6.3.0`.
 ### Solo-mode limitations (deferred to v0.2.0+)
 
 - Team mode / parallel subagent dispatch (`--team` flag is no-op in v0.1.0)
-- Per-command `allowed-tools` hard enforcement (uses hook + skill prose instead — see [H2 Permission Compatibility Matrix](../../.deep-work/*/phase-2-plan.md))
+- Per-command `allowed-tools` hard enforcement (uses hook + skill prose instead — see Permission Compatibility Matrix in docs/migration-from-claude-code.md)
 - Cross-model verification via external Claude API (Gemini internal reviewers only)
 
 ### Known behavioral differences from CC

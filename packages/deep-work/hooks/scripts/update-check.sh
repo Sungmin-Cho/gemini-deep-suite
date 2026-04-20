@@ -11,16 +11,19 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLUGIN_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
-STATE_DIR="$HOME/.claude"
+STATE_DIR="$HOME/.gemini/deep-work-state"
+mkdir -p "$STATE_DIR" 2>/dev/null || true
 CACHE_FILE="$STATE_DIR/.deep-work-update-cache"
 MARKER_FILE="$STATE_DIR/.deep-work-just-upgraded"
 SNOOZE_FILE="$STATE_DIR/.deep-work-update-snoozed"
-REMOTE_URL="https://raw.githubusercontent.com/Sungmin-Cho/claude-deep-work/main/plugins/deep-work/package.json"
+# v0.1.0: update check disabled — no public mirror repo yet. Will re-enable at v0.1.1 pointing at gemini-deep-work mirror.
+REMOTE_URL=""
 
 # ─── Read local version from package.json ─────────────────────
 LOCAL=""
-if [ -f "$PLUGIN_DIR/package.json" ]; then
-  LOCAL=$(node -e 'const p=process.argv[1]; console.log(JSON.parse(require("fs").readFileSync(p+"/package.json","utf8")).version)' "$PLUGIN_DIR" 2>/dev/null || true)
+if [ -f "$PLUGIN_DIR/gemini-extension.json" ]; then
+  [[ -z "$REMOTE_URL" ]] && exit 0
+LOCAL=$(node -e 'const p=process.argv[1]; console.log(JSON.parse(require("fs").readFileSync(p+"/package.json","utf8")).version)' "$PLUGIN_DIR" 2>/dev/null || true)
 fi
 if [ -z "$LOCAL" ]; then
   exit 0  # can't determine version

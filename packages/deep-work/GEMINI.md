@@ -40,11 +40,11 @@ See [docs/migration-from-claude-code.md](../../docs/migration-from-claude-code.m
 - **Solo mode only** — no Team mode (parallel dispatch)
 - **MultiEdit atomicity** — replaced with transactional pre-validation pattern
 - **Per-command tool gates** — hook enforcement + skill body prose
-- **Runtime state namespace** — `.gemini/deep-work/state-<session>.md` (NOT `.claude/`)
+- **Runtime state namespace** — `.gemini/deep-work.<session>.md` (NOT `.claude/`)
 
 ## Session state
 
-Location: `.gemini/deep-work/state-<SESSION_ID>.md` (YAML frontmatter + body). See `skills/deep-work/SKILL.md` for field definitions.
+Location: `.gemini/deep-work.<SESSION_ID>.md` (YAML frontmatter + body). See `skills/deep-work/SKILL.md` for field definitions.
 
 ## Hooks
 

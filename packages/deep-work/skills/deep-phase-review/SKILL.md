@@ -11,7 +11,7 @@ Manually trigger structural review and/or cross-model adversarial review on the 
 
 ## Language
 
-Detect the user's language from their messages or the Claude Code `language` setting. Output ALL user-facing messages in the detected language. The display templates below use Korean as the reference format — translate naturally to the user's language while preserving emoji, formatting, and structure.
+Detect the user's language from their messages or the Gemini CLI `language` setting. Output ALL user-facing messages in the detected language. The display templates below use Korean as the reference format — translate naturally to the user's language while preserving emoji, formatting, and structure.
 
 ## Usage
 
@@ -71,7 +71,7 @@ Read `skills/shared/references/phase-review-gate.md` from the plugin root. This 
 Also read `skills/shared/references/review-gate.md` for Structural Review and Adversarial Review details (referenced by phase-review-gate.md).
 
 Follow the Phase Review Gate protocol for reviewer selection:
-- Phase 0~2 (brainstorm, research, plan): Structural + Adversarial + 셀프 + Opus 서브에이전트
+- Phase 0~2 (brainstorm, research, plan): Structural + Adversarial + 셀프 + gemini-2.5-pro 서브에이전트
 
 > **Note:** Phase 3 (implement) 리뷰는 `/deep-implement` 커맨드의 Phase Review Gate에서 자동 실행된다. `/deep-phase-review`는 문서 Phase(0~2) 전용이다.
 
@@ -81,7 +81,7 @@ Follow the Phase Review Gate protocol for reviewer selection:
 
 1. Check document size. If < 500 characters, skip with warning per protocol.
 2. Determine the review dimensions for the target phase (see review-gate.md Section 2).
-3. Read `evaluator_model` from state file (default: "sonnet"). Spawn an Agent with the resolved evaluator model to review the document on those dimensions.
+3. Read `evaluator_model` from state file (default: "gemini-2.5-pro"). Spawn an Agent with the resolved evaluator model to review the document on those dimensions.
 4. Parse the Agent's JSON response.
 5. Write results to:
    - `$WORK_DIR/${phase}-review.json`
@@ -189,7 +189,7 @@ If document modification from Section 6 is significant:
 Update `$STATE_FILE`:
 - Add or update `phase_review.{phase}` (where `{phase}` is the target phase) with:
   - `reviewed`: true
-  - `reviewers`: array of reviewer names (e.g., ["self", "opus-subagent", "codex"])
+  - `reviewers`: array of reviewer names (e.g., ["self", "gemini-2.5-pro-subagent", "codex"])
   - `self_issues`: count of self-review issues
   - `external_issues`: count of external review issues
   - `resolved`: count of resolved issues

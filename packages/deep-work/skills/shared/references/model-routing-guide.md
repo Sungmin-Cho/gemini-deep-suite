@@ -8,14 +8,14 @@ Phase별 최적 모델을 배정하여 토큰 비용을 30~40% 절감한다.
 
 | Phase | 기본 모델 | 근거 | Agent 위임 |
 |-------|----------|------|-----------|
-| Research | sonnet | 탐색/분석에 충분 | ✅ Solo: Agent 스폰 / Team: model 파라미터 |
+| Research | gemini-2.5-pro | 탐색/분석에 충분 | ✅ Solo: Agent 스폰 / Team: model 파라미터 |
 | Plan | (메인 세션) | 대화형 피드백 루프 필요 | ❌ |
-| Implement | sonnet | 코드 작성에 충분 | ✅ Solo: Agent 스폰 / Team: model 파라미터 |
-| Test | haiku | 테스트 실행/파싱만 | ✅ Agent 스폰 |
+| Implement | gemini-2.5-pro | 코드 작성에 충분 | ✅ Solo: Agent 스폰 / Team: model 파라미터 |
+| Test | gemini-2.5-flash | 테스트 실행/파싱만 | ✅ Agent 스폰 |
 
 ## 커스터마이징
 
-`/deep-work` 초기화 시 커스텀 설정 선택 가능. 유효 값: sonnet, haiku, opus.
+`/deep-work` 초기화 시 커스텀 설정 선택 가능. 유효 값: gemini-2.5-pro, gemini-2.5-flash, gemini-2.5-pro.
 
 ## Plan이 메인 세션을 사용하는 이유
 

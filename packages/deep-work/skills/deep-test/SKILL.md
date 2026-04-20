@@ -33,7 +33,7 @@ description: "Phase 4 — Test: comprehensive verification + implement-test retr
 
 ## Model Routing
 
-`model_routing.test` 확인 (기본: "haiku"). "main"이 아니면 Agent 위임 (전체 test 지시 포함).
+`model_routing.test` 확인 (기본: "gemini-2.5-flash"). "main"이 아니면 Agent 위임 (전체 test 지시 포함).
 "main" → 아래 inline 실행.
 
 # Section 2: Phase 실행

@@ -31,7 +31,7 @@ if [[ -z "$SESSION_ID" ]]; then
   [[ -f "$_PTR" ]] && SESSION_ID="$(tr -d '\n\r' < "$_PTR")"
 fi
 if [[ -n "$SESSION_ID" ]]; then
-  PHASE_CACHE="$PROJECT_ROOT/.gemini/deep-work/.phase-cache-${SESSION_ID}"
+  PHASE_CACHE="$PROJECT_ROOT/.gemini/.phase-cache-${SESSION_ID}"
   [[ -f "$PHASE_CACHE" ]] && rm -f "$PHASE_CACHE"
 fi
 
@@ -317,7 +317,7 @@ append_session_history() {
 # Remove our own PPID cache (no longer needed after session close) and any
 # orphaned .hook-tool-input.* files older than 60 minutes. Best-effort.
 rm -f "$PROJECT_ROOT/.gemini/.hook-tool-input.$PPID" 2>/dev/null
-find "$PROJECT_ROOT/.claude" -maxdepth 1 -name '.hook-tool-input.*' -type f -mmin +60 -delete 2>/dev/null || true
+find "$PROJECT_ROOT/.gemini" -maxdepth 1 -name '.hook-tool-input.*' -type f -mmin +60 -delete 2>/dev/null || true
 
 # v5.4: Update last_activity on CLI stop (do NOT unregister)
 if [[ -n "${DEEP_WORK_SESSION_ID:-}" ]]; then

@@ -94,8 +94,10 @@ const PATH_REPLACEMENTS = [
 // Prepended to hook shell scripts that need stdin parsing.
 const STDIN_PARSE_HEADER = `
 # ── Gemini stdin JSON parsing (replaces CC env vars) ───────────────────
-# Called once at script start. Reads stdin (if any) into _HOOK_STDIN,
-# and extracts tool_name / tool_input for downstream logic.
+# Called once at script start. Reads stdin JSON (Gemini envelope) and sets
+# _HOOK_TOOL_NAME / _HOOK_TOOL_INPUT / _HOOK_EVENT_NAME — BUT only if the
+# stdin actually contains those fields. Pre-set env vars (e.g. from test
+# fixtures or legacy CC compatibility) are preserved when stdin is silent.
 _hook_parse_stdin() {
   if [[ ! -t 0 ]]; then
     _HOOK_STDIN="$(cat)"
@@ -103,9 +105,36 @@ _hook_parse_stdin() {
     _HOOK_STDIN=""
   fi
   if [[ -n "$_HOOK_STDIN" ]]; then
-    _HOOK_TOOL_NAME="$(printf '%s' "$_HOOK_STDIN" | python3 -c 'import json,sys; d=json.loads(sys.stdin.read()); print(d.get("tool_name",""))' 2>/dev/null || echo "")"
-    _HOOK_TOOL_INPUT="$(printf '%s' "$_HOOK_STDIN" | python3 -c 'import json,sys; d=json.loads(sys.stdin.read()); ti=d.get("tool_input",{}); print(json.dumps(ti) if isinstance(ti,dict) else str(ti))' 2>/dev/null || echo "")"
-    _HOOK_EVENT_NAME="$(printf '%s' "$_HOOK_STDIN" | python3 -c 'import json,sys; d=json.loads(sys.stdin.read()); print(d.get("hook_event_name",""))' 2>/dev/null || echo "")"
+    _stdin_tn="$(printf '%s' "$_HOOK_STDIN" | python3 -c 'import json,sys
+try:
+  d=json.loads(sys.stdin.read())
+  v=d.get("tool_name","")
+  print(v if isinstance(v,str) else "")
+except Exception:
+  pass' 2>/dev/null || echo "")"
+    [[ -n "$_stdin_tn" ]] && _HOOK_TOOL_NAME="$_stdin_tn"
+    _stdin_ti="$(printf '%s' "$_HOOK_STDIN" | python3 -c 'import json,sys
+raw=sys.stdin.read()
+try:
+  d=json.loads(raw)
+  if isinstance(d,dict) and "tool_name" in d and "tool_input" in d:
+    ti=d["tool_input"]
+    if isinstance(ti,(dict,list)):
+      print(json.dumps(ti,separators=(",",":")))
+    else:
+      print(str(ti))
+  elif isinstance(d,dict) and "tool_name" not in d:
+    print(raw,end="")
+except Exception:
+  pass' 2>/dev/null || echo "")"
+    [[ -n "$_stdin_ti" ]] && _HOOK_TOOL_INPUT="$_stdin_ti"
+    _stdin_en="$(printf '%s' "$_HOOK_STDIN" | python3 -c 'import json,sys
+try:
+  d=json.loads(sys.stdin.read())
+  print(d.get("hook_event_name",""))
+except Exception:
+  pass' 2>/dev/null || echo "")"
+    [[ -n "$_stdin_en" ]] && _HOOK_EVENT_NAME="$_stdin_en"
   fi
   export _HOOK_STDIN _HOOK_TOOL_NAME _HOOK_TOOL_INPUT _HOOK_EVENT_NAME
 }

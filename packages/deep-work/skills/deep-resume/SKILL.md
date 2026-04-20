@@ -1,6 +1,6 @@
 ---
 name: deep-resume
-description: "Phase 0 — Brainstorm: explore why before how (skip-able)"
+description: "Resume an interrupted deep-work session from its last completed phase"
 ---
 
 # Section 1: State 로드 (필수 — 건너뛰기 금지)
@@ -90,7 +90,7 @@ Read("../shared/references/review-gate.md") — Structural Review 실행:
 - Phase: brainstorm
 - Document: `$WORK_DIR/brainstorm.md`
 - Dimensions: problem_clarity, approach_differentiation, success_measurability, edge_case_coverage
-- Model: "haiku"
+- Model: "gemini-2.5-flash"
 - Max iterations: 2
 
 `--skip-review` (state의 `review_state: skipped`) 시 건너뜀.

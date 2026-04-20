@@ -58,11 +58,11 @@ Read `$WORK_DIR/plan.md` → **Slice Checklist** 파싱. 각 slice:
 
 ## Model Routing
 
-State에서 `model_routing.implement` 확인 (기본: "sonnet").
+State에서 `model_routing.implement` 확인 (기본: "gemini-2.5-pro").
 
 - **"main"**: 현재 대화 모델로 inline 실행 → 아래 Solo Slice Loop 진행
-- **특정 모델명** (sonnet/haiku/opus): 해당 모델로 Agent 위임
-- **"auto"**: slice size에 따라 모델 자동 선택 (S→haiku, M→sonnet, L→sonnet, XL→opus)
+- **특정 모델명** (gemini-2.5-pro/gemini-2.5-flash/gemini-2.5-pro): 해당 모델로 Agent 위임
+- **"auto"**: slice size에 따라 모델 자동 선택 (S→gemini-2.5-flash, M→gemini-2.5-pro, L→gemini-2.5-pro, XL→gemini-2.5-pro)
 
 Agent 위임 시: `mode: "bypassPermissions"`, TDD 규칙 + Slice Review 규칙을 프롬프트에 포함 (hook이 delegated agent에 미적용), slice당 10분 timeout.
 상세: Read("../shared/references/model-routing-guide.md")
@@ -150,6 +150,9 @@ GREEN 단계에서 예기치 않은 테스트 실패 시:
 1. `debug_mode: true` → 체계적 조사 (Read error → Analyze → Hypothesize → Fix)
 2. 3회 실패 시 **STOP → 사용자에게 질문**
 3. Root cause를 receipt `debug.root_cause_note`에 기록
+
+
+> ⚠️ **v0.1.0 SOLO-ONLY**: Team/Parallel dispatch instructions below are inactive. Gemini v0.1.0 enforces solo mode; `--team` flag is a no-op. Skip TeamCreate-related sections.
 
 ## Team Mode
 

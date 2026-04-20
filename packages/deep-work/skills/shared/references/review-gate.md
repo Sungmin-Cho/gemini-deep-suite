@@ -5,7 +5,7 @@
 Phase 문서(brainstorm.md, research.md, plan.md)에 대한 자동 품질 검증 프로토콜.
 두 가지 레벨의 리뷰를 제공한다:
 
-1. **Structural Review** — haiku subagent가 phase별 차원에서 문서를 평가
+1. **Structural Review** — gemini-2.5-flash subagent가 phase별 차원에서 문서를 평가
 2. **Adversarial Review** — 외부 모델(codex, gemini)이 plan.md를 독립 평가 후, Claude가 종합
 
 ## Minimum Document Size
@@ -21,7 +21,7 @@ Phase 문서(brainstorm.md, research.md, plan.md)에 대한 자동 품질 검증
 
 ### 실행 방법
 
-Claude가 Agent(haiku 모델)를 스폰하여 현재 phase의 문서를 리뷰한다.
+Claude가 Agent(gemini-2.5-flash 모델)를 스폰하여 현재 phase의 문서를 리뷰한다.
 
 **Agent prompt 템플릿:**
 ```

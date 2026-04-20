@@ -328,14 +328,11 @@ if [[ -n "$PHASE5_MODE" ]]; then
                       _P5_HELPER_OK=1
                     fi
                   fi
-                  # Also allow user-level ~/.gemini/extensions/<ext>/skills/deep-integrate/
-                  _P5_USER_EXT_CANON="$(_p5_canonicalize "${HOME:-}/.gemini/extensions")"
-                  if [[ $_P5_HELPER_OK -eq 0 && -n "$_P5_USER_EXT_CANON" ]]; then
-                    case "$_P5_HELPER_CANON" in
-                      "$_P5_USER_EXT_CANON"/*/skills/deep-integrate/"$_P5_HELPER_BASENAME")
-                        _P5_HELPER_OK=1 ;;
-                    esac
-                  fi
+                  # Gemini port: ONLY allow helper from THIS extension's own dir.
+                  # Wildcard $HOME/.gemini/extensions/*/ trust is unsafe — any user-
+                  # installed extension could ship a malicious phase5-finalize.sh.
+                  # $_P5_EXT_ROOT already covers this; no additional user-level
+                  # wildcard allowance.
                 fi
                 if [[ $_P5_HELPER_OK -eq 1 ]]; then
                   exit 0
@@ -512,13 +509,8 @@ if [[ -n "$PHASE5_MODE" ]]; then
             if [[ "$_P5_SCRIPT_CANON" == "$_P5_EXT_EXPECTED_CANON" ]]; then
               _P5_IS_ALLOWED_SCRIPT=1
             fi
-            _P5_USER_EXT_CANON="$(_p5_canonicalize "${HOME:-}/.gemini/extensions")"
-            if [[ $_P5_IS_ALLOWED_SCRIPT -ne 1 && -n "$_P5_USER_EXT_CANON" ]]; then
-              case "$_P5_SCRIPT_CANON" in
-                "$_P5_USER_EXT_CANON"/*/skills/deep-integrate/"$_P5_SCRIPT_BASE")
-                  _P5_IS_ALLOWED_SCRIPT=1 ;;
-              esac
-            fi
+            # Gemini port: restricted to $_P5_EXT_ROOT only (no wildcard ext trust).
+            # $_P5_EXT_EXPECTED_CANON already enforces this above.
           fi
         fi
         if [[ $_P5_IS_ALLOWED_SCRIPT -ne 1 ]]; then
@@ -623,7 +615,7 @@ TOOL_NAME="${_HOOK_TOOL_NAME:-}"
 # Session ID가 없어도 P0 worktree guard는 작동해야 하므로, 경로 추출을
 # session ID 조건 밖으로 분리하고, ownership check만 session ID 안에 유지한다.
 _OWN_FILE=""
-if [[ "$TOOL_NAME" == "write_file" || "$TOOL_NAME" == "replace" || "$TOOL_NAME" == "replace" ]]; then
+if [[ "$TOOL_NAME" == "write_file" || "$TOOL_NAME" == "replace" ]]; then
   # Use JSON parser instead of regex — handles escaped quotes in file paths
   _OWN_FILE="$(extract_file_path_from_json "$TOOL_INPUT")"
 elif [[ "$TOOL_NAME" == "run_shell_command" ]]; then
@@ -723,7 +715,7 @@ if [[ "$CURRENT_PHASE" != "implement" && "$TOOL_NAME" != "run_shell_command" ]];
   # F-17: Use _OWN_FILE/_OWN_FILE_NORM from unified extraction above (no duplicate grep)
   # If no file_path: block for Write/Edit/MultiEdit (fail-closed), allow others
   if [[ -z "$_OWN_FILE" ]]; then
-    if [[ "$TOOL_NAME" == "write_file" || "$TOOL_NAME" == "replace" || "$TOOL_NAME" == "replace" ]]; then
+    if [[ "$TOOL_NAME" == "write_file" || "$TOOL_NAME" == "replace" ]]; then
       cat <<JSON
 {"decision":"block","reason":"⛔ Deep Work Guard: 현재 ${CURRENT_PHASE} 단계입니다. 파일 경로를 확인할 수 없어 차단되었습니다.\n\n다시 시도해주세요."}
 JSON

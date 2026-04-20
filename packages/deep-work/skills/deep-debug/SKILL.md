@@ -9,7 +9,7 @@ You are entering **Debug Sub-Mode** within a Deep Work implementation session.
 
 ## Language
 
-Detect the user's language from their messages or the Claude Code `language` setting. Output ALL user-facing messages in the detected language.
+Detect the user's language from their messages or the Gemini CLI `language` setting. Output ALL user-facing messages in the detected language.
 
 ## Iron Rule
 

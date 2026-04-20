@@ -109,8 +109,8 @@ if (require.main === module) {
 
   // Cache detection results to .claude/.sensor-detection-cache.json for
   // subsequent deep-implement runs to read without re-running detection.
-  const cacheDir = path.join(projectRoot, '.claude');
-  if (fs.existsSync(cacheDir)) {
+  const cacheDir = fs.existsSync(path.join(projectRoot, '.gemini')) ? path.join(projectRoot, '.gemini') : (fs.existsSync(path.join(projectRoot, '.claude')) ? path.join(projectRoot, '.claude') : null);
+  if (cacheDir && fs.existsSync(cacheDir)) {
     fs.writeFileSync(path.join(cacheDir, '.sensor-detection-cache.json'), JSON.stringify(result, null, 2));
   }
 }

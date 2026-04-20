@@ -12,7 +12,7 @@ Manage slices within a Deep Work implementation session.
 
 ## Language
 
-Detect the user's language from their messages or the Claude Code `language` setting. Output ALL user-facing messages in the detected language.
+Detect the user's language from their messages or the Gemini CLI `language` setting. Output ALL user-facing messages in the detected language.
 
 ## Usage
 
@@ -106,8 +106,8 @@ TDD state icon mapping:
 
 `/deep-slice model SLICE-NNN [model]`:
 
-1. Validate model name: must be one of `haiku`, `sonnet`, `opus`, `main`, `auto`
-2. If invalid, display: `⚠️ 유효하지 않은 모델: [model]. 사용 가능: haiku, sonnet, opus, main, auto`
+1. Validate model name: must be one of `gemini-2.5-flash`, `gemini-2.5-pro`, `gemini-2.5-pro`, `main`, `auto`
+2. If invalid, display: `⚠️ 유효하지 않은 모델: [model]. 사용 가능: gemini-2.5-flash, gemini-2.5-pro, gemini-2.5-pro, main, auto`
 3. Store override in state file: `model_overrides.SLICE-NNN: [model]`
 4. Display:
    ```

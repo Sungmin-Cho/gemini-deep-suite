@@ -90,7 +90,7 @@ Read("../shared/references/review-gate.md") — Structural Review 실행:
 - Phase: brainstorm
 - Document: `$WORK_DIR/brainstorm.md`
 - Dimensions: problem_clarity, approach_differentiation, success_measurability, edge_case_coverage
-- Model: "haiku"
+- Model: "gemini-2.5-flash"
 - Max iterations: 2
 
 `--skip-review` (state의 `review_state: skipped`) 시 건너뜀.

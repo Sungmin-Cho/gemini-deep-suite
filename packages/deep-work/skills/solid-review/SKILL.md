@@ -12,7 +12,7 @@ You are performing a **SOLID Design Review** — analyzing code against the 5 SO
 
 ## Language
 
-Detect the user's language from their messages or the Claude Code `language` setting. **Output ALL user-facing messages in the detected language.** The display templates below use Korean as the reference format — translate naturally to the user's language while preserving emoji, formatting, and structure.
+Detect the user's language from their messages or the Gemini CLI `language` setting. **Output ALL user-facing messages in the detected language.** The display templates below use Korean as the reference format — translate naturally to the user's language while preserving emoji, formatting, and structure.
 
 ## Critical Constraints
 

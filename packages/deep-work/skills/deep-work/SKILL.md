@@ -3,6 +3,18 @@ name: deep-work
 description: "Evidence-Driven Development — session initialization + auto-flow orchestration"
 ---
 
+> ## ⚠️ v0.1.0 Solo-Mode Contract
+>
+> Team mode is **not supported** in v0.1.0. If the user passed `--team`:
+> 1. Use the `ask_user` tool to inform: "v0.1.0 is solo-only. Team mode (parallel subagent dispatch) is deferred to v0.2.0. Proceeding in solo mode."
+
+> ⚠️ **v0.1.0 SOLO-ONLY**: Team/Parallel dispatch instructions below are inactive. Gemini v0.1.0 enforces solo mode; `--team` flag is a no-op. Skip TeamCreate-related sections.
+
+> 2. Ignore any `TeamCreate`/parallel-agent instructions in this skill body or references.
+> 3. Set `team_mode: solo` in the state file regardless of input.
+> See `docs/migration-from-claude-code.md` §Team mode.
+
+
 # Step 1: 세션 초기화
 
 사용자 입력: **[the user's task input provided via postSubmitPrompt after this skill body]**
@@ -75,7 +87,7 @@ write_session_pointer "$SESSION_ID"
 프로필 로드 성공 시 이 단계 전부 건너뜀.
 
 1. **작업 모드**: Solo / Team → Team 선택 시 Agent Teams 환경변수 확인
-2. **모델 라우팅**: 기본값(R=sonnet, P=main, I=sonnet, T=haiku) / 커스텀
+2. **모델 라우팅**: 기본값(R=gemini-2.5-pro, P=main, I=gemini-2.5-pro, T=gemini-2.5-flash) / 커스텀
 3. **알림**: 없음 / 로컬 / 외부 채널 (Slack/Discord/Telegram/Webhook)
 4. **프로젝트 타입**: 기존 코드베이스 / 제로베이스
 5. **시작 단계**: Brainstorm / Research / Plan
