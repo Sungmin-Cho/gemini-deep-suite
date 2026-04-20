@@ -31,6 +31,8 @@ concurrency:
 jobs:
   subtree-split-and-push:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
         with:
@@ -112,3 +114,36 @@ jobs:
             SPLIT_SHA="$(git rev-parse publish/$PKG)"
             git push "mirror-$PKG" "$SPLIT_SHA:refs/tags/$REF"
           fi
+
+      - name: Create GitHub Release on mirror repo
+        if: github.event.inputs.dry_run != 'true' && steps.meta.outputs.ref != ''
+        env:
+          PKG: ${{ steps.meta.outputs.package }}
+          REF: ${{ steps.meta.outputs.ref }}
+          GH_TOKEN: ${{ secrets.MIRROR_GH_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::warning::MIRROR_GH_TOKEN not set — skipping release creation. Gemini CLI 'extensions install' requires a GitHub Release to resolve 'latest'. Create the release manually: gh release create $REF --repo sungmin-cho/gemini-$PKG"
+            exit 0
+          fi
+          # Check if release already exists (idempotency)
+          if gh release view "$REF" --repo "sungmin-cho/gemini-$PKG" >/dev/null 2>&1; then
+            echo "Release $REF already exists — skipping"
+            exit 0
+          fi
+          # Derive release notes from package CHANGELOG if present
+          NOTES_FILE="packages/$PKG/CHANGELOG.md"
+          if [ -f "$NOTES_FILE" ]; then
+            RELEASE_NOTES="See [CHANGELOG.md](https://github.com/Sungmin-Cho/gemini-deep-suite/blob/main/packages/$PKG/CHANGELOG.md) for details.
+
+Install:
+\`\`\`
+gemini extensions install https://github.com/Sungmin-Cho/gemini-$PKG
+\`\`\`"
+          else
+            RELEASE_NOTES="Release $REF of $PKG. Install via: gemini extensions install https://github.com/Sungmin-Cho/gemini-$PKG"
+          fi
+          echo "$RELEASE_NOTES" | gh release create "$REF" \
+            --repo "sungmin-cho/gemini-$PKG" \
+            --title "$PKG $REF" \
+            --notes-file -
