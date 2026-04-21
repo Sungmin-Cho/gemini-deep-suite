@@ -134,16 +134,11 @@ jobs:
           # Derive release notes from package CHANGELOG if present
           NOTES_FILE="packages/$PKG/CHANGELOG.md"
           if [ -f "$NOTES_FILE" ]; then
-            RELEASE_NOTES="See [CHANGELOG.md](https://github.com/Sungmin-Cho/gemini-deep-suite/blob/main/packages/$PKG/CHANGELOG.md) for details.
-
-Install:
-\`\`\`
-gemini extensions install https://github.com/Sungmin-Cho/gemini-$PKG
-\`\`\`"
+            RELEASE_NOTES=$(printf 'See [CHANGELOG.md](https://github.com/Sungmin-Cho/gemini-deep-suite/blob/main/packages/%s/CHANGELOG.md) for details.\n\nInstall:\n```\ngemini extensions install https://github.com/Sungmin-Cho/gemini-%s\n```\n' "$PKG" "$PKG")
           else
             RELEASE_NOTES="Release $REF of $PKG. Install via: gemini extensions install https://github.com/Sungmin-Cho/gemini-$PKG"
           fi
-          echo "$RELEASE_NOTES" | gh release create "$REF" \
+          printf '%s' "$RELEASE_NOTES" | gh release create "$REF" \
             --repo "sungmin-cho/gemini-$PKG" \
             --title "$PKG $REF" \
             --notes-file -
